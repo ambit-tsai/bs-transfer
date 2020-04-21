@@ -47,7 +47,7 @@
 #### 配置项说明
 |名称|类型|默认值|说明|
 |-|-|-|-|
-|mountPoint|string/Element/jQuery||jQuery 选择器，或挂载点元素对象|
+|mountPoint|string/Element/jQuery||挂载点，可以是 jQuery 选择器，或元素对象|
 |tableOptions|object|{...}|公共的 Bootstrap Table 参数|
 |upperOptions|object|{}|上层表格的参数|
 |lowerOptions|object|{}|下层表格的参数|
