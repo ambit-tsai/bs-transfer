@@ -26,7 +26,7 @@ export default class BsTransfer {
      * @param  {...any} args 
      */
     upperTable(...args) {
-        return this.$upperTable.bootstrapTable(args);
+        return this.$upperTable.bootstrapTable(...args);
     }
 
 
@@ -35,6 +35,6 @@ export default class BsTransfer {
      * @param  {...any} args 
      */
     lowerTable(...args) {
-        return this.$lowerTable.bootstrapTable(args);
+        return this.$lowerTable.bootstrapTable(...args);
     }
 }
