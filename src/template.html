@@ -1,0 +1,43 @@
+<div class="ID">
+    <div class="ID__upper">
+        <table></table>
+    </div>
+    <div class="ID__middle">
+        <button class="btn btn-info btn-sm" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button>
+        <button class="btn btn-info btn-sm" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button>
+    </div>
+    <div class="ID__lower">
+        <table></table>
+    </div>
+
+
+    <style type="text/css">
+        div.ID {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #ddd;
+        }
+        .ID__upper {
+            height: 0;
+            flex-grow: 1;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .ID__middle {
+            padding: 8px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        .ID__middle > button + button {
+            margin-left: 8px;
+        }
+        .ID__lower {
+            height: 0;
+            flex-grow: 1;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+    </style>
+</div>

@@ -1,0 +1,30 @@
+{
+  "name": "bs-transfer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "rollup": "^2.6.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-terser": "^5.3.0"
+  },
+  "scripts": {
+    "dev": "rollup -w -c scripts/rollup.dev.js",
+    "prod": "rollup -c scripts/rollup.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ambit-tsai/bs-transfer.git"
+  },
+  "author": "ambit_tsai@qq.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ambit-tsai/bs-transfer/issues"
+  },
+  "homepage": "https://github.com/ambit-tsai/bs-transfer#readme"
+}
