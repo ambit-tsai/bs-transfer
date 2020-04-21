@@ -1,8 +1,8 @@
 {
   "name": "bs-transfer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "bootstrap transfer",
+  "main": "dist/bs-transfer.min.js",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.9.0",
