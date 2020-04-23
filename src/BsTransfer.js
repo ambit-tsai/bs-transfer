@@ -1,5 +1,6 @@
+import $ from 'jquery';
 import options from './options';
-import {initOptions, initDOM} from './functions';
+import {appendStyles, initOptions, initDOM, waitForRender} from './functions';
 
 
 export default class BsTransfer {
@@ -15,9 +16,15 @@ export default class BsTransfer {
     $lowerTable;
 
 
-    constructor(options) {
-        initOptions(this, options);
+    constructor(opts) {
+        if (!$(`style.${BsTransfer.id}`).length) {
+            appendStyles(BsTransfer.id);         // 添加样式
+        }
+        initOptions(this, opts);
         initDOM(this, BsTransfer.id);
+        if (typeof opts.afterRender === 'function') {
+            waitForRender(opts.afterRender);
+        }
     }
 
 

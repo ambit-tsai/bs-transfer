@@ -1,5 +1,7 @@
+import $ from 'jquery';
 import options from './options';
 import template from './template.html';
+import styles from './styles.css';
 
 
 /**
@@ -86,4 +88,28 @@ function adjustHeight(instance) {
     const height = instance.$upper.height();
     instance.$upperTable.bootstrapTable('resetView', {height});
     instance.$lowerTable.bootstrapTable('resetView', {height});
+}
+
+
+/**
+ * 等待渲染
+ * @param {function} fn 
+ */
+export function waitForRender(fn) {
+    if (Promise) {
+        Promise.resolve().then(fn)
+    } else {
+        setTimeout(fn);
+    }
+}
+
+
+/**
+ * 增加样式
+ * @param {string} id 
+ */
+export function appendStyles(id) {
+    let html = `<style class="ID" type="text/css">${styles}</style>`;
+    html = html.replace(/ID/g, id);
+    $(document.body).append(html);
 }
