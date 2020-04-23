@@ -1,0 +1,28 @@
+
+div.ID {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #ddd;
+}
+.ID__upper {
+    height: 0;
+    flex-grow: 1;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.ID__middle {
+    padding: 8px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.ID__middle > button + button {
+    margin-left: 8px;
+}
+.ID__lower {
+    height: 0;
+    flex-grow: 1;
+    margin-left: 8px;
+    margin-right: 8px;
+}
