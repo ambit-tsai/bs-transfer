@@ -1,6 +1,6 @@
 {
   "name": "bs-transfer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "bootstrap transfer",
   "main": "dist/bs-transfer.min.js",
   "dependencies": {},
@@ -15,8 +15,13 @@
   },
   "scripts": {
     "dev": "rollup -w -c scripts/rollup.dev.js",
-    "prod": "rollup -c scripts/rollup.min.js"
+    "prod": "rollup -c scripts/rollup.min.js&& rollup -c scripts/rollup.esm.js"
   },
+  "keywords": [
+    "bs-transfer",
+    "transfer",
+    "穿梭窗"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ambit-tsai/bs-transfer.git"

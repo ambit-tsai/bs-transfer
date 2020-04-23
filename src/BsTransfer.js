@@ -47,7 +47,7 @@ export default class BsTransfer {
 
 
     /**
-     * 同时调用俩个表格的方法
+     * 同时调用两个表格的方法
      * @param  {...any} args 
      */
     twoTables(...args) {
@@ -57,7 +57,7 @@ export default class BsTransfer {
 
 
     /**
-     * 调整高度
+     * 调整两个表格高度
      */
     adjustHeight() {
         const height = this.$upper.height();

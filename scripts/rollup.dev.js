@@ -17,7 +17,10 @@ export default {
     ],
     plugins: [
         string({
-            include: '**/*.html',
+            include: [
+                '**/*.html',
+                '**/*.css',
+            ],
         }),
         babel({
             plugins: [

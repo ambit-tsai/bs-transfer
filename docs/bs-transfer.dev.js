@@ -1,8 +1,10 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.BsTransfer = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
+  typeof define === 'function' && define.amd ? define(['jquery'], factory) :
+  (global = global || self, global.BsTransfer = factory(global.jQuery));
+}(this, (function ($) { 'use strict';
+
+  $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -31,7 +33,9 @@
     lowerOptions: {}
   };
 
-  var template = "<div class=\"ID\">\r\n    <div class=\"ID__upper\">\r\n        <table></table>\r\n    </div>\r\n    <div class=\"ID__middle\">\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>\r\n    </div>\r\n    <div class=\"ID__lower\">\r\n        <table></table>\r\n    </div>\r\n\r\n\r\n    <style type=\"text/css\">\r\n        div.ID {\r\n            display: flex;\r\n            flex-direction: column;\r\n            height: 100%;\r\n            border: 1px solid #ddd;\r\n        }\r\n        .ID__upper {\r\n            height: 0;\r\n            flex-grow: 1;\r\n            margin-left: 8px;\r\n            margin-right: 8px;\r\n        }\r\n        .ID__middle {\r\n            padding: 8px;\r\n            text-align: center;\r\n            border-top: 1px solid #ddd;\r\n            border-bottom: 1px solid #ddd;\r\n        }\r\n        .ID__middle > button + button {\r\n            margin-left: 8px;\r\n        }\r\n        .ID__lower {\r\n            height: 0;\r\n            flex-grow: 1;\r\n            margin-left: 8px;\r\n            margin-right: 8px;\r\n        }\r\n    </style>\r\n</div>";
+  var template = "<div class=\"ID\">\r\n    <div class=\"ID__upper\">\r\n        <table></table>\r\n    </div>\r\n    <div class=\"ID__middle\">\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>\r\n    </div>\r\n    <div class=\"ID__lower\">\r\n        <table></table>\r\n    </div>\r\n</div>";
+
+  var styles = "\r\ndiv.ID {\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100%;\r\n    border: 1px solid #ddd;\r\n}\r\n.ID__upper {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}\r\n.ID__middle {\r\n    padding: 8px;\r\n    text-align: center;\r\n    border-top: 1px solid #ddd;\r\n    border-bottom: 1px solid #ddd;\r\n}\r\n.ID__middle > button + button {\r\n    margin-left: 8px;\r\n}\r\n.ID__lower {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}";
 
   /**
    * 初始化选项
@@ -124,9 +128,32 @@
       height
     });
   }
+  /**
+   * 等待渲染
+   * @param {function} fn 
+   */
+
+
+  function waitForRender(fn) {
+    if (Promise) {
+      Promise.resolve().then(fn);
+    } else {
+      setTimeout(fn);
+    }
+  }
+  /**
+   * 增加样式
+   * @param {string} id 
+   */
+
+  function appendStyles(id) {
+    let html = `<style class="ID" type="text/css">${styles}</style>`;
+    html = html.replace(/ID/g, id);
+    $(document.body).append(html);
+  }
 
   class BsTransfer {
-    constructor(options) {
+    constructor(opts) {
       _defineProperty(this, "options", void 0);
 
       _defineProperty(this, "$dom", void 0);
@@ -139,8 +166,16 @@
 
       _defineProperty(this, "$lowerTable", void 0);
 
-      initOptions(this, options);
+      if (!$(`style.${BsTransfer.id}`).length) {
+        appendStyles(BsTransfer.id); // 添加样式
+      }
+
+      initOptions(this, opts);
       initDOM(this, BsTransfer.id);
+
+      if (typeof opts.afterRender === 'function') {
+        waitForRender(opts.afterRender);
+      }
     }
     /**
      * 调用上层表格的方法
@@ -149,7 +184,7 @@
 
 
     upperTable(...args) {
-      return this.$upperTable.bootstrapTable(args);
+      return this.$upperTable.bootstrapTable(...args);
     }
     /**
      * 调用下层表格的方法
@@ -158,7 +193,7 @@
 
 
     lowerTable(...args) {
-      return this.$lowerTable.bootstrapTable(args);
+      return this.$lowerTable.bootstrapTable(...args);
     }
 
   }
