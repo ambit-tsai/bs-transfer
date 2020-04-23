@@ -5,6 +5,7 @@ export default {
         clickToSelect: true,
         search: true,
         showSearchButton: true,
+        sidePagination: 'server',
     },
     upperOptions: {},
     lowerOptions: {},
