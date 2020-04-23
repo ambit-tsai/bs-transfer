@@ -63,7 +63,9 @@
 
 
 #### 实例方法
-|方法|说明|
-|-|-|
-|upperTable|调用上层表格的方法|
-|lowerTable|调用下层表格的方法|
+|方法|参数|说明|
+|-|-|-|
+|upperTable|原 Bootstrap Table 参数|调用上层表格的方法|
+|lowerTable|原 Bootstrap Table 参数|调用下层表格的方法|
+|twoTables|原 Bootstrap Table 参数|同时调用两个表格的方法|
+|adjustHeight||调整两个表格高度|
