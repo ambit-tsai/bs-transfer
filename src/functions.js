@@ -55,8 +55,8 @@ export function initDOM(instance, id) {
     instance.$dom.addClass($el.attr('class'));
     $el.replaceWith(instance.$dom);
 
-    adjustHeight(instance);
-    $(window).resize(rafThrottle(_ => adjustHeight(instance)));
+    $(window).resize(rafThrottle(_ => instance.adjustHeight()));
+    waitForRender(_ => instance.adjustHeight());
 }
 
 
@@ -77,17 +77,6 @@ function rafThrottle(fn) {
             token = 0;  // 释放令牌
         });
     };
-}
-
-
-/**
- * 调整高度
- * @param {BsTransfer} instance
- */
-function adjustHeight(instance) {
-    const height = instance.$upper.height();
-    instance.$upperTable.bootstrapTable('resetView', {height});
-    instance.$lowerTable.bootstrapTable('resetView', {height});
 }
 
 

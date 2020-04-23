@@ -44,4 +44,23 @@ export default class BsTransfer {
     lowerTable(...args) {
         return this.$lowerTable.bootstrapTable(...args);
     }
+
+
+    /**
+     * 同时调用俩个表格的方法
+     * @param  {...any} args 
+     */
+    twoTables(...args) {
+        this.$upperTable.bootstrapTable(...args);
+        this.$lowerTable.bootstrapTable(...args);
+    }
+
+
+    /**
+     * 调整高度
+     */
+    adjustHeight() {
+        const height = this.$upper.height();
+        this.twoTables('resetView', {height});
+    }
 }
