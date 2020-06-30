@@ -1,5 +1,7 @@
 import banner from './banner';
 import {string} from 'rollup-plugin-string';
+import postcss from 'rollup-plugin-postcss';
+import autoprefixer from 'autoprefixer';
 import babel from 'rollup-plugin-babel';
 
 
@@ -21,7 +23,11 @@ export default {
         string({
             include: [
                 '**/*.html',
-                '**/*.css',
+            ],
+        }),
+        postcss({
+            plugins: [
+                autoprefixer,
             ],
         }),
         babel({
