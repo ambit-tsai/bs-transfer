@@ -1,6 +1,11 @@
 import $ from 'jquery';
 import options from './options';
-import {appendStyles, initOptions, initDOM, waitForRender} from './functions';
+import {
+    appendStyles,
+    initOptions,
+    initTransfer,
+    waitForRender,
+} from './functions';
 
 
 export default class BsTransfer {
@@ -21,7 +26,7 @@ export default class BsTransfer {
             appendStyles(BsTransfer.id);         // 添加样式
         }
         initOptions(this, opts);
-        initDOM(this, BsTransfer.id);
+        initTransfer(this, BsTransfer.id);
         if (typeof opts.afterRender === 'function') {
             waitForRender(opts.afterRender);
         }

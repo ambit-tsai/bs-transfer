@@ -10,6 +10,7 @@ div.ID {
     flex-grow: 1;
     margin-left: 8px;
     margin-right: 8px;
+    overflow: hidden;
 }
 .ID__middle {
     padding: 8px;
@@ -25,4 +26,5 @@ div.ID {
     flex-grow: 1;
     margin-left: 8px;
     margin-right: 8px;
+    overflow: hidden;
 }

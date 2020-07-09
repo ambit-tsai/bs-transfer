@@ -3,7 +3,8 @@
 
 
 #### 安装
-<a href="dist/bs-transfer.min.js" target="_blank">dist/bs-transfer.min.js</a>
+1. &lt;script&gt;标签引入：<a href="dist/bs-transfer.min.js" target="_blank">dist/bs-transfer.min.js</a>
+1. ES Module 引入：<a href="dist/bs-transfer.mjs" target="_blank">dist/bs-transfer.mjs</a>
 
 
 #### 示例
@@ -53,6 +54,8 @@
 |lowerOptions|object|{}|下层表格的参数|
 |toUpper|function||向上按钮的点击事件|
 |toLower|function||向下按钮的点击事件|
+|afterRender|function||等待GUI渲染后执行|
+|~~mutexFields~~|array||互斥字段。示例：['field']、['upperField', 'lowerField']|
 
 
 #### 静态属性

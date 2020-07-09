@@ -27,7 +27,8 @@
       escape: true,
       clickToSelect: true,
       search: true,
-      showSearchButton: true
+      showSearchButton: true,
+      sidePagination: 'server'
     },
     upperOptions: {},
     lowerOptions: {}
@@ -35,7 +36,7 @@
 
   var template = "<div class=\"ID\">\r\n    <div class=\"ID__upper\">\r\n        <table></table>\r\n    </div>\r\n    <div class=\"ID__middle\">\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>\r\n    </div>\r\n    <div class=\"ID__lower\">\r\n        <table></table>\r\n    </div>\r\n</div>";
 
-  var styles = "\r\ndiv.ID {\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100%;\r\n    border: 1px solid #ddd;\r\n}\r\n.ID__upper {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}\r\n.ID__middle {\r\n    padding: 8px;\r\n    text-align: center;\r\n    border-top: 1px solid #ddd;\r\n    border-bottom: 1px solid #ddd;\r\n}\r\n.ID__middle > button + button {\r\n    margin-left: 8px;\r\n}\r\n.ID__lower {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}";
+  var styles = "\r\ndiv.ID {\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100%;\r\n    border: 1px solid #ddd;\r\n}\r\n.ID__upper {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n    overflow: hidden;\r\n}\r\n.ID__middle {\r\n    padding: 8px;\r\n    text-align: center;\r\n    border-top: 1px solid #ddd;\r\n    border-bottom: 1px solid #ddd;\r\n}\r\n.ID__middle > button + button {\r\n    margin-left: 8px;\r\n}\r\n.ID__lower {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n    overflow: hidden;\r\n}";
 
   /**
    * 初始化选项
@@ -45,6 +46,12 @@
 
   function initOptions(instance, opts) {
     opts = $.extend(true, {}, options, opts);
+
+    if (opts.mutexFields instanceof Array) {
+      const [field0, field1] = opts.mutexFields;
+      if (field0 && !field1) opts.mutexFields[1] = field0;
+    }
+
     opts.upperOptions = $.extend(true, {}, opts.tableOptions, opts.upperOptions);
     opts.lowerOptions = $.extend(true, {}, opts.tableOptions, opts.lowerOptions);
 
@@ -59,22 +66,27 @@
     instance.options = opts;
   }
   /**
-   * 初始化 DOM
+   * 初始化穿梭框
    * @param {BsTransfer} instance
    * @param {string} id
    */
 
-  function initDOM(instance, id) {
+  function initTransfer(instance, id) {
+    const opts = instance.options;
     const html = template.replace(/ID/g, id);
     instance.$dom = $(html);
     instance.$upper = instance.$dom.find(`.${id}__upper`);
     instance.$lower = instance.$dom.find(`.${id}__lower`);
     instance.$upperTable = instance.$upper.children('table');
     instance.$lowerTable = instance.$lower.children('table'); // 初始化表格
+    //     isInitialized = initWithMutexFields(instance);
+    // }
 
-    const opts = instance.options;
-    instance.$upperTable.bootstrapTable(opts.upperOptions);
-    instance.$lowerTable.bootstrapTable(opts.lowerOptions); // 监听按钮点击事件
+    {
+      instance.upperTable(opts.upperOptions);
+      instance.lowerTable(opts.lowerOptions);
+    } // 监听按钮点击事件
+
 
     const $middle = instance.$dom.find(`.${id}__middle`);
 
@@ -89,9 +101,10 @@
 
     const $el = $(opts.mountPoint);
     instance.$dom.addClass($el.attr('class'));
-    $el.replaceWith(instance.$dom);
-    adjustHeight(instance);
-    $(window).resize(rafThrottle(_ => adjustHeight(instance)));
+    $el.replaceWith(instance.$dom); // 自适应高度
+
+    $(window).resize(rafThrottle(_ => instance.adjustHeight()));
+    waitForRender(_ => instance.adjustHeight());
   }
   /**
    * 利用`requestAnimationFrame`进行节流
@@ -112,21 +125,6 @@
         token = 0; // 释放令牌
       });
     };
-  }
-  /**
-   * 调整高度
-   * @param {BsTransfer} instance
-   */
-
-
-  function adjustHeight(instance) {
-    const height = instance.$upper.height();
-    instance.$upperTable.bootstrapTable('resetView', {
-      height
-    });
-    instance.$lowerTable.bootstrapTable('resetView', {
-      height
-    });
   }
   /**
    * 等待渲染
@@ -171,7 +169,7 @@
       }
 
       initOptions(this, opts);
-      initDOM(this, BsTransfer.id);
+      initTransfer(this, BsTransfer.id);
 
       if (typeof opts.afterRender === 'function') {
         waitForRender(opts.afterRender);
@@ -194,6 +192,27 @@
 
     lowerTable(...args) {
       return this.$lowerTable.bootstrapTable(...args);
+    }
+    /**
+     * 同时调用两个表格的方法
+     * @param  {...any} args 
+     */
+
+
+    twoTables(...args) {
+      this.$upperTable.bootstrapTable(...args);
+      this.$lowerTable.bootstrapTable(...args);
+    }
+    /**
+     * 调整两个表格高度
+     */
+
+
+    adjustHeight() {
+      const height = this.$upper.height();
+      this.twoTables('resetView', {
+        height
+      });
     }
 
   }

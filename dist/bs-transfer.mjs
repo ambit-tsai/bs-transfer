@@ -1,7 +1,7 @@
 
 /**
  * bs-transfer
- * @version 0.0.2
+ * @version 0.1.0
  * @author ambit_tsai@qq.com
  * @license Apache-2.0
  * @see {@link https://github.com/ambit-tsai/bs-transfer#readme}
@@ -38,7 +38,37 @@ var options = {
 
 var template = "<div class=\"ID\">\r\n    <div class=\"ID__upper\">\r\n        <table></table>\r\n    </div>\r\n    <div class=\"ID__middle\">\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>\r\n        <button class=\"btn btn-info btn-sm\" type=\"button\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>\r\n    </div>\r\n    <div class=\"ID__lower\">\r\n        <table></table>\r\n    </div>\r\n</div>";
 
-var styles = "\r\ndiv.ID {\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100%;\r\n    border: 1px solid #ddd;\r\n}\r\n.ID__upper {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}\r\n.ID__middle {\r\n    padding: 8px;\r\n    text-align: center;\r\n    border-top: 1px solid #ddd;\r\n    border-bottom: 1px solid #ddd;\r\n}\r\n.ID__middle > button + button {\r\n    margin-left: 8px;\r\n}\r\n.ID__lower {\r\n    height: 0;\r\n    flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n}";
+function styleInject(css, ref) {
+  if (ref === void 0) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') {
+    return;
+  }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var css_248z = "\r\ndiv.ID {\r\n    display: -webkit-box;\r\n    display: -webkit-flex;\r\n    display: -moz-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n    -webkit-flex-direction: column;\r\n       -moz-box-orient: vertical;\r\n       -moz-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n    height: 100%;\r\n    border: 1px solid #ddd;\r\n}\r\n.ID__upper {\r\n    height: 0;\r\n    -webkit-box-flex: 1;\r\n    -webkit-flex-grow: 1;\r\n       -moz-box-flex: 1;\r\n        -ms-flex-positive: 1;\r\n            flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n    overflow: hidden;\r\n}\r\n.ID__middle {\r\n    padding: 8px;\r\n    text-align: center;\r\n    border-top: 1px solid #ddd;\r\n    border-bottom: 1px solid #ddd;\r\n}\r\n.ID__middle > button + button {\r\n    margin-left: 8px;\r\n}\r\n.ID__lower {\r\n    height: 0;\r\n    -webkit-box-flex: 1;\r\n    -webkit-flex-grow: 1;\r\n       -moz-box-flex: 1;\r\n        -ms-flex-positive: 1;\r\n            flex-grow: 1;\r\n    margin-left: 8px;\r\n    margin-right: 8px;\r\n    overflow: hidden;\r\n}";
+styleInject(css_248z);
 
 /**
  * 初始化选项
@@ -48,6 +78,12 @@ var styles = "\r\ndiv.ID {\r\n    display: flex;\r\n    flex-direction: column;\
 
 function initOptions(instance, opts) {
   opts = $.extend(true, {}, options, opts);
+
+  if (opts.mutexFields instanceof Array) {
+    const [field0, field1] = opts.mutexFields;
+    if (field0 && !field1) opts.mutexFields[1] = field0;
+  }
+
   opts.upperOptions = $.extend(true, {}, opts.tableOptions, opts.upperOptions);
   opts.lowerOptions = $.extend(true, {}, opts.tableOptions, opts.lowerOptions);
 
@@ -62,22 +98,27 @@ function initOptions(instance, opts) {
   instance.options = opts;
 }
 /**
- * 初始化 DOM
+ * 初始化穿梭框
  * @param {BsTransfer} instance
  * @param {string} id
  */
 
-function initDOM(instance, id) {
+function initTransfer(instance, id) {
+  const opts = instance.options;
   const html = template.replace(/ID/g, id);
   instance.$dom = $(html);
   instance.$upper = instance.$dom.find(`.${id}__upper`);
   instance.$lower = instance.$dom.find(`.${id}__lower`);
   instance.$upperTable = instance.$upper.children('table');
   instance.$lowerTable = instance.$lower.children('table'); // 初始化表格
+  //     isInitialized = initWithMutexFields(instance);
+  // }
 
-  const opts = instance.options;
-  instance.$upperTable.bootstrapTable(opts.upperOptions);
-  instance.$lowerTable.bootstrapTable(opts.lowerOptions); // 监听按钮点击事件
+  {
+    instance.upperTable(opts.upperOptions);
+    instance.lowerTable(opts.lowerOptions);
+  } // 监听按钮点击事件
+
 
   const $middle = instance.$dom.find(`.${id}__middle`);
 
@@ -92,7 +133,8 @@ function initDOM(instance, id) {
 
   const $el = $(opts.mountPoint);
   instance.$dom.addClass($el.attr('class'));
-  $el.replaceWith(instance.$dom);
+  $el.replaceWith(instance.$dom); // 自适应高度
+
   $(window).resize(rafThrottle(_ => instance.adjustHeight()));
   waitForRender(_ => instance.adjustHeight());
 }
@@ -135,7 +177,7 @@ function waitForRender(fn) {
  */
 
 function appendStyles(id) {
-  let html = `<style class="ID" type="text/css">${styles}</style>`;
+  let html = `<style class="ID" type="text/css">${css_248z}</style>`;
   html = html.replace(/ID/g, id);
   $(document.body).append(html);
 }
@@ -159,7 +201,7 @@ class BsTransfer {
     }
 
     initOptions(this, opts);
-    initDOM(this, BsTransfer.id);
+    initTransfer(this, BsTransfer.id);
 
     if (typeof opts.afterRender === 'function') {
       waitForRender(opts.afterRender);
@@ -184,7 +226,7 @@ class BsTransfer {
     return this.$lowerTable.bootstrapTable(...args);
   }
   /**
-   * 同时调用俩个表格的方法
+   * 同时调用两个表格的方法
    * @param  {...any} args 
    */
 
@@ -194,7 +236,7 @@ class BsTransfer {
     this.$lowerTable.bootstrapTable(...args);
   }
   /**
-   * 调整高度
+   * 调整两个表格高度
    */
 
 
